@@ -149,7 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Contact contact = new Contact();
                 contact.setId(cursor.getInt(cursor.getColumnIndex(Contact.COLUMN_ID)));
                 contact.setNumber(cursor.getString(cursor.getColumnIndex(Contact.COLUMN_NUMBER)));
-                contact.setNumber(cursor.getString(cursor.getColumnIndex(Contact.COLUMN_NAME)));
+                contact.setName(cursor.getString(cursor.getColumnIndex(Contact.COLUMN_NAME)));
                 contact.setTimestamp(cursor.getString(cursor.getColumnIndex(Contact.COLUMN_TIMESTAMP)));
 
                 contacts.add(contact);
