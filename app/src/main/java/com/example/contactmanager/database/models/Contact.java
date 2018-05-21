@@ -1,5 +1,7 @@
 package com.example.contactmanager.database.models;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by Fred Adewole on 18/05/2018.
  */
@@ -38,7 +40,7 @@ public class Contact {
             "CREATE TABLE " + TABLE_NAME + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_NAME + " TEXT,"
-                    + COLUMN_NUMBER + " INTEGER,"
+                    + COLUMN_NUMBER + " TEXT,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
@@ -53,7 +55,7 @@ public class Contact {
      * @param name      the name
      * @param timestamp the timestamp
      */
-    public Contact(int id, String number, String name, String timestamp) {
+    public Contact(@Nullable int id, String number, String name, @Nullable String timestamp) {
         this.id = id;
         this.name = name;
         this.number = number;

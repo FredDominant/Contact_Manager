@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.contactmanager.database.models.Contact;
 
@@ -41,7 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      *
      * @param context to use to open or create the database
      * @param name    of the database file, or null for an in-memory database
-     * @param factory to use for creating cursor objects, or null for the default
+     * @param factory to use for creating cursor objects, or null for the default_avatar
      * @param version number of the database (starting at 1); if the database is older,                {@link #onUpgrade} will be used to upgrade the database; if the database is                newer, {@link #onDowngrade} will be used to downgrade the database
      */
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -93,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertContact(String name, long number) {
+    public long insertContact(String name, String number) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Add fields to row.
@@ -109,12 +110,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Contact getSingleContact(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT " + Contact.COLUMN_ID + ", "
-                + Contact.COLUMN_NUMBER + ", "
-                + Contact.COLUMN_NUMBER + ", "
-                + Contact.COLUMN_TIMESTAMP
-                + " FROM " + Contact.TABLE_NAME + "WHERE id = " + String.valueOf(id);
 
         Cursor cursor = db.query(Contact.TABLE_NAME,
                 new String[] {Contact.COLUMN_ID, Contact.COLUMN_NAME, Contact.COLUMN_NUMBER,
@@ -140,7 +135,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Contact> contacts = new ArrayList<>();
 
         String query = "SELECT * FROM " + Contact.TABLE_NAME + " ORDER BY "
-                + Contact.COLUMN_TIMESTAMP + " DESC";
+                + Contact.COLUMN_NAME + " DESC";
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
@@ -176,8 +171,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Contact.COLUMN_NUMBER, contact.getNumber());
-        values.put(Contact.COLUMN_NAME, contact.getName());
+        String name = contact.getName();
+        String number = contact.getNumber();
+
+        values.put(Contact.COLUMN_NUMBER, number);
+        values.put(Contact.COLUMN_NAME, name);
 
         return db.update(Contact.TABLE_NAME, values, Contact.COLUMN_ID + "= ?",
                 new String[] {String.valueOf(contact.getId())});
@@ -189,5 +187,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[] {String.valueOf(contact.getId())});
 
         db.close();
+    }
+
+    public void deleteAllContacts() {
+        SQLiteDatabase db = getWritableDatabase();
+        this.onUpgrade(db, 1, 2);
     }
 }
